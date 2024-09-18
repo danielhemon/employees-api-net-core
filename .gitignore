@@ -1,0 +1,53 @@
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]eleases/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]/
+x64/
+x86/
+[Aa][Rr][Mm]/
+bin/
+obj/
+
+# NuGet
+*.nupkg
+*.snupkg
+*.nuget/
+*.nuget.targets
+
+# NPM packages
+node_modules/
+
+# VS Code
+.vscode/
+
+# Rider
+.idea/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# DotCover
+.idea/.idea_dotcover/
+
+# Coverage results
+coverage/
+
+# Local settings
+*.local
+*.local.xml
+*.local.json
