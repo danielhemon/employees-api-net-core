@@ -35,7 +35,7 @@ namespace api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var _employee = await _context.Empleados.FindAsync(id);
+            var _employee = await _employeeRepo.GetByIdAsync(id);
 
             if (_employee == null)
             {
@@ -49,8 +49,7 @@ namespace api.Controllers
         public async Task<IActionResult> Create([FromBody] CreateEmployeeRequestDto employeeDto)
         {
             var employeeModel = employeeDto.ToEmployeeFromCreateDto();
-            await _context.Empleados.AddAsync(employeeModel);
-            await _context.SaveChangesAsync();
+            await _employeeRepo.CreateAsync(employeeModel);
             return CreatedAtAction(nameof(GetById), new { id = employeeModel.Id }, employeeModel.ToEmployeeDto());
         }
 
@@ -59,18 +58,13 @@ namespace api.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateEmployeeRequestDto updateDto)
         {
-            var _employee = await _context.Empleados.FirstOrDefaultAsync(X => X.Id == id);
+            var _employee = await _employeeRepo.UpdateAsync(id, updateDto);
 
             if (_employee == null)
             {
                 return NotFound();
             }
 
-            _employee.Name = updateDto.Name;
-            _employee.Position = updateDto.Position;
-            _employee.Description = updateDto.Description;
-            _employee.Active = updateDto.Active;
-            await _context.SaveChangesAsync();
             return Ok(_employee.ToEmployeeDto());
         }
 
@@ -78,15 +72,12 @@ namespace api.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var _employee = await _context.Empleados.FirstOrDefaultAsync(X => X.Id == id);
+            var _employee = await _employeeRepo.DeleteAsync(id);
 
             if (_employee == null)
             {
                 return NotFound();
             }
-
-            _context.Empleados.Remove(_employee);
-            await _context.SaveChangesAsync();
             return NoContent();
         }
     }
