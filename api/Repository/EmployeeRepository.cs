@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
 using api.Dtos.Employee;
+using api.Helpers;
 using api.interfaces;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
@@ -19,9 +20,20 @@ namespace api.Repository
             _context = context;
         }
 
-        public async Task<List<Employee>> GetAllAsync()
+        public async Task<List<Employee>> GetAllAsync(QueryObject query)
         {
-            return await _context.Empleados.ToListAsync();
+            var employees = _context.Empleados.AsQueryable();
+            if (!string.IsNullOrWhiteSpace(query.Name))
+            {
+                employees = employees.Where(e => e.Name.Contains(query.Name));
+            }
+
+            if (!string.IsNullOrWhiteSpace(query.Position))
+            {
+                employees = employees.Where(e => e.Position.Contains(query.Position));
+            }
+
+            return await employees.ToListAsync();
         }
 
         public async Task<Employee> CreateAsync(Employee employeeModel)

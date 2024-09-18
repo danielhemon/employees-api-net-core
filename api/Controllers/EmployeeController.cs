@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
 using api.Dtos.Employee;
+using api.Helpers;
 using api.interfaces;
 using api.Mappers;
 using Microsoft.AspNetCore.Mvc;
@@ -25,18 +26,18 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var _tempEmployees = await _employeeRepo.GetAllAsync();
+            var _tempEmployees = await _employeeRepo.GetAllAsync(query);
             var _employees = _tempEmployees.Select(s => s.ToEmployeeDto());
             return Ok(_employees);
         }
 
-        [HttpGet("{id: int}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             if (!ModelState.IsValid)
@@ -67,7 +68,7 @@ namespace api.Controllers
 
 
         [HttpPut]
-        [Route("{id: int}")]
+        [Route("{id:int}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateEmployeeRequestDto updateDto)
         {
             if (!ModelState.IsValid)
@@ -85,7 +86,7 @@ namespace api.Controllers
         }
 
         [HttpDelete]
-        [Route("{id: int}")]
+        [Route("{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             if (!ModelState.IsValid)
