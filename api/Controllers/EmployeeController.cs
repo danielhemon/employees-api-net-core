@@ -27,14 +27,22 @@ namespace api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var _tempEmployees = await _employeeRepo.GetAllAsync();
             var _employees = _tempEmployees.Select(s => s.ToEmployeeDto());
             return Ok(_employees);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id: int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var _employee = await _employeeRepo.GetByIdAsync(id);
 
             if (_employee == null)
@@ -48,6 +56,10 @@ namespace api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateEmployeeRequestDto employeeDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var employeeModel = employeeDto.ToEmployeeFromCreateDto();
             await _employeeRepo.CreateAsync(employeeModel);
             return CreatedAtAction(nameof(GetById), new { id = employeeModel.Id }, employeeModel.ToEmployeeDto());
@@ -55,9 +67,13 @@ namespace api.Controllers
 
 
         [HttpPut]
-        [Route("{id}")]
+        [Route("{id: int}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateEmployeeRequestDto updateDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var _employee = await _employeeRepo.UpdateAsync(id, updateDto);
 
             if (_employee == null)
@@ -69,9 +85,13 @@ namespace api.Controllers
         }
 
         [HttpDelete]
-        [Route("{id}")]
+        [Route("{id: int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var _employee = await _employeeRepo.DeleteAsync(id);
 
             if (_employee == null)
