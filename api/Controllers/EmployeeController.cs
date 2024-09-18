@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
 using api.Dtos.Employee;
+using api.interfaces;
 using api.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,15 +16,18 @@ namespace api.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
-        public EmployeeController(ApplicationDBContext context)
+        private readonly IEmployeeRepository _employeeRepo;
+
+        public EmployeeController(ApplicationDBContext context, IEmployeeRepository employeeRepo)
         {
             _context = context;
+            _employeeRepo = employeeRepo;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var _tempEmployees = await _context.Empleados.ToListAsync();
+            var _tempEmployees = await _employeeRepo.GetAllAsync();
             var _employees = _tempEmployees.Select(s => s.ToEmployeeDto());
             return Ok(_employees);
         }
